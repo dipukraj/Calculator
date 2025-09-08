@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advanced Calculator with Social Media Footer</title>
+
+  <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Backup Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous" />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f0f3;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      margin: 10px;
+      padding: 20px 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .calculator {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 10px 10px 30px #bebebe,
+        -10px -10px 30px #ffffff;
+      width: 370px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .display {
+      background: #e0e0e0;
+      border-radius: 15px;
+      padding: 15px 20px;
+      font-size: 2rem;
+      text-align: right;
+      letter-spacing: 1px;
+      user-select: none;
+      min-height: 60px;
+      word-wrap: break-word;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .history {
+      font-size: 0.85rem;
+      color: #888;
+      min-height: 40px;
+      text-align: right;
+      margin-bottom: 10px;
+      opacity: 0.7;
+      white-space: pre-line;
+      max-height: 80px;
+      overflow-y: auto;
+      transition: color 0.3s;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: 12px;
+    }
+
+    button {
+      padding: 18px 0;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: none;
+      background: #f0f0f3;
+      box-shadow: 5px 5px 10px #bebebe,
+        -5px -5px 10px #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      color: #333;
+    }
+
+    button:active {
+      box-shadow: inset 5px 5px 10px #bebebe,
+        inset -5px -5px 10px #ffffff;
+    }
+
+    button.operator {
+      background: #ff9500;
+      color: white;
+    }
+
+    button.operator:active {
+      background: #cc7a00;
+    }
+
+    button.equal {
+      background: #34c759;
+      color: white;
+      grid-column: span 2;
+    }
+
+    button.equal:active {
+      background: #239a41;
+    }
+
+    @media (max-width: 400px) {
+      .calculator {
+        width: 90vw;
+      }
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background: #121212;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .calculator {
+      background: #1e1e1e;
+      box-shadow: 5px 5px 15px #000000,
+        -5px -5px 15px #333333;
+    }
+
+    body.dark-mode .display {
+      background: #2c2c2c;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .history {
+      color: #a0a0a0;
+    }
+
+    body.dark-mode button {
+      background: #2c2c2c;
+      color: #e0e0e0;
+      box-shadow: inset 3px 3px 5px #161616,
+        inset -3px -3px 5px #3a3a3a;
+    }
+
+    body.dark-mode button.operator {
+      background: #ff9500;
+      color: white;
+    }
+
+    body.dark-mode button.operator:active {
+      background: #cc7a00;
+    }
+
+    body.dark-mode button.equal {
+      background: #34c759;
+      color: white;
+    }
+
+    body.dark-mode button.equal:active {
+      background: #239a41;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: auto;
+      padding: 20px 0;
+      color: #666;
+      font-size: 14px;
+      user-select: none;
+    }
+
+    body.dark-mode footer {
+      color: #999;
+    }
+
+    footer .social-icons a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 22px;
+      transition: color 0.3s ease;
+      display: inline-block;
+      min-width: 24px;
+      min-height: 24px;
+    }
+
+    footer .social-icons a:hover {
+      color: #007bff;
+      transform: scale(1.1);
+    }
+
+    /* Fallback for when Font Awesome doesn't load */
+    footer .social-icons a::before {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    footer .social-icons a[aria-label="Twitter"]::before {
+      content: "T";
+    }
+
+    footer .social-icons a[aria-label="LinkedIn"]::before {
+      content: "in";
+    }
+
+    footer .social-icons a[aria-label="GitHub"]::before {
+      content: "Git";
+    }
+
+    footer .social-icons a[aria-label="Website"]::before {
+      content: "🌐";
+    }
+
+    footer .social-icons a[aria-label="Instagram"]::before {
+      content: "IG";
+    }
+
+    /* Hide fallback when Font Awesome loads */
+    footer .social-icons a i {
+      display: inline-block;
+    }
+
+    footer .social-icons a:has(i)::before {
+      display: none;
+    }
+
+    #toggle-theme {
+      margin-bottom: 15px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      padding: 8px 15px;
+      border-radius: 15px;
+      box-shadow: 3px 3px 7px #0056b3;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    #toggle-theme:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <button id="toggle-theme" aria-label="Toggle Dark or Light Mode">Switch to Dark Mode</button>
+
+  <div class="calculator" role="region" aria-label="Advanced Calculator">
+    <div class="history" id="history" aria-live="polite"></div>
+    <div class="display" id="display" aria-live="assertive" aria-atomic="true">0</div>
+
+    <div class="buttons" role="group" aria-label="Calculator buttons">
+      <!-- Controls -->
+      <button id="clear" aria-label="Clear input">C</button>
+      <button class="operator" id="backspace" aria-label="Backspace">⌫</button>
+      <button class="operator" data-value="%" aria-label="Percent">%</button>
+      <button class="operator" data-value="/" aria-label="Divide">÷</button>
+      <button id="squareRoot" aria-label="Square root">√</button>
+
+      <!-- Numbers & Operators -->
+      <button data-value="7" aria-label="7">7</button>
+      <button data-value="8" aria-label="8">8</button>
+      <button data-value="9" aria-label="9">9</button>
+      <button class="operator" data-value="*" aria-label="Multiply">×</button>
+      <button id="cubeBtn" aria-label="Cube">³</button>
+
+      <button data-value="4" aria-label="4">4</button>
+      <button data-value="5" aria-label="5">5</button>
+      <button data-value="6" aria-label="6">6</button>
+      <button class="operator" data-value="-" aria-label="Minus">−</button>
+      <button id="powerBtn" aria-label="Power">^</button>
+
+      <button data-value="1" aria-label="1">1</button>
+      <button data-value="2" aria-label="2">2</button>
+      <button data-value="3" aria-label="3">3</button>
+      <button class="operator" data-value="+" aria-label="Plus">+</button>
+
+      <button data-value="00" aria-label="Double zero">00</button>
+      <button data-value="0" aria-label="0">0</button>
+      <button data-value="." aria-label="Decimal point">.</button>
+      <button class="equal" id="equals" aria-label="Equals">=</button>
+    </div>
+  </div>
+
+  <footer>
+    <div style="margin-bottom: 8px;">
+      <h4>Developed with ✨Sukoon by Dipu K Raj ❤️</h4>
+    </div>
+    <p>&copy;2025 | All Rights Reserved.</p>
+    <div class="social-icons" style="font-size: 20px;">
+      <a href="https://twitter.com/yourprofile" target="_blank" rel="noopener noreferrer"
+        style="margin:0 10px; color: inherit;" aria-label="Twitter">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer"
+        style="margin:0 10px; color: inherit;" aria-label="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="https://github.com/yourprofile" target="_blank" rel="noopener noreferrer"
+        style="margin:0 10px; color: inherit;" aria-label="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://yourwebsite.com" target="_blank" rel="noopener noreferrer" style="margin:0 10px; color: inherit;"
+        aria-label="Website">
+        <i class="fas fa-globe"></i>
+      </a>
+      <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener noreferrer"
+        style="margin:0 10px; color: inherit;" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const display = document.getElementById('display');
+    const history = document.getElementById('history');
+    const toggleBtn = document.getElementById('toggle-theme');
+    const squareRootBtn = document.getElementById('squareRoot');
+    const cubeBtn = document.getElementById('cubeBtn');
+    const powerBtn = document.getElementById('powerBtn');
+
+    let currentInput = '0';
+    let historyLog = [];
+    let darkMode = false;
+
+    function updateDisplay() {
+      display.textContent = currentInput;
+    }
+
+    function updateHistory() {
+      history.textContent = historyLog.slice(-7).join('\n');
+    }
+
+    function balanceParentheses(expr) {
+      let openCount = (expr.match(/\(/g) || []).length;
+      let closeCount = (expr.match(/\)/g) || []).length;
+      while (closeCount < openCount) {
+        expr += ')';
+        closeCount++;
+      }
+      return expr;
+    }
+
+    function processExpression(expr) {
+      expr = expr.replace(/÷/g, '/').replace(/×/g, '*').replace(/−/g, '-');
+      expr = expr.replace(/(\d+(\.\d+)?)([\+\-\*\/])(\d+(\.\d+)?)%/g, (match, a, dec1, op, b, dec2) => {
+        return `(${a}${op}(${a}*${b}/100))`;
+      });
+      expr = expr.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
+      while (/\^/.test(expr)) {
+        expr = expr.replace(/([\d\.]+|\([^\(\)]+\))\^([\d\.]+|\([^\(\)]+\))/g, 'Math.pow($1,$2)');
+      }
+      return expr;
+    }
+
+    function calculateExpression(expr) {
+      try {
+        expr = balanceParentheses(expr);
+        expr = processExpression(expr);
+        let result = Function('"use strict";return (' + expr + ')')();
+        if (Number.isFinite(result)) {
+          return parseFloat(result.toFixed(12));
+        } else {
+          return 'Error';
+        }
+      } catch {
+        return 'Error';
+      }
+    }
+
+    document.querySelectorAll('.buttons button').forEach(button => {
+      button.addEventListener('click', () => {
+        const val = button.dataset.value;
+
+        if (button.id === 'clear') {
+          currentInput = '0';
+          historyLog = [];
+          updateHistory();
+          updateDisplay();
+          return;
+        }
+        if (button.id === 'backspace') {
+          if (currentInput.length > 1) currentInput = currentInput.slice(0, -1);
+          else currentInput = '0';
+          updateDisplay();
+          return;
+        }
+        if (button.id === 'equals') {
+          let res = calculateExpression(currentInput);
+          if (res !== 'Error') {
+            historyLog.push(currentInput + ' = ' + res);
+            updateHistory();
+            currentInput = res.toString();
+          } else currentInput = 'Error';
+          updateDisplay();
+          return;
+        }
+
+        if (val === '.') {
+          let parts = currentInput.split(/[\+\-\*\/\%\^\(\)]/);
+          if (parts[parts.length - 1].includes('.')) return;
+        }
+
+        if (['+', '*', '/', '%', '^'].includes(val) && currentInput === '0') return;
+
+        if (val) {
+          currentInput += val;
+          if (currentInput.startsWith('0') && !currentInput.startsWith('0.')) {
+            currentInput = currentInput.replace(/^0+/, '');
+            if (currentInput === '') currentInput = '0';
+          }
+        }
+        updateDisplay();
+      });
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      darkMode = !darkMode;
+      document.body.classList.toggle('dark-mode', darkMode);
+      toggleBtn.textContent = darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    });
+
+    // Square root button click handler
+    squareRootBtn.addEventListener('click', () => {
+      try {
+        let val = calculateExpression(currentInput);
+        if (val === 'Error' || val < 0) {
+          currentInput = 'Error';
+        } else {
+          let sqrtVal = Math.sqrt(val);
+          historyLog.push(`√(${val}) = ${sqrtVal}`);
+          updateHistory();
+          currentInput = sqrtVal.toString();
+        }
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    });
+
+    // Cube button click handler
+    cubeBtn.addEventListener('click', () => {
+      try {
+        let val = calculateExpression(currentInput);
+        if (val === 'Error') {
+          currentInput = 'Error';
+        } else {
+          let cubeVal = val * val * val;
+          historyLog.push(`³(${val}) = ${cubeVal}`);
+          updateHistory();
+          currentInput = cubeVal.toString();
+        }
+        updateDisplay();
+      } catch {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    });
+
+    // Power button click handler (just append "^")
+    powerBtn.addEventListener('click', () => {
+      if (currentInput && currentInput !== 'Error') {
+        currentInput += '^';
+        updateDisplay();
+      }
+    });
+
+    updateDisplay();
+  </script>
+
+</body>
+
+</html>
